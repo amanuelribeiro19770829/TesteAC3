@@ -29,42 +29,6 @@
     </ol>
   </div>
 
-  <script>
-    (function () {
-      function elt(id){ return document.getElementById(id); }
-      function badge(ok, text){
-        return '<p class="'+(ok?'ok':'no')+'"><b>'+(ok?'✔':'✖')+'</b> '+text+'</p>';
-      }
 
-      // 2) DETEÇÃO DO NAMESPACE
-      var hasSI = !!window.SalesforceInteractions;
-      var hasEVG = !!window.Evergage;
-
-      var html = "";
-      html += badge(true, "Beacon incluído no HTML (etapa de carregamento verificada no Network).");
-      html += badge(hasSI || hasEVG, "Objeto global encontrado: "
-        + (hasSI ? "SalesforceInteractions" : (hasEVG ? "Evergage" : "nenhum")));
-
-      // 3) INFO EXTRA ÚTIL
-      try {
-        // muitos ambientes expõem uma fila/event bus; apenas mostramos o que existir
-        var details = {
-          userAgent: navigator.userAgent,
-          location: location.href,
-          cookies: document.cookie
-        };
-        html += '<pre style="white-space:pre-wrap;background:#fafafa;padding:12px;border-radius:8px">'
-          + JSON.stringify(details, null, 2) + '</pre>';
-      } catch(e){}
-
-      elt("status").innerHTML = html;
-
-      // 4) LOGS NA CONSOLA
-      console.group("MC Personalization — Verificação do Beacon");
-      console.log("SalesforceInteractions:", window.SalesforceInteractions);
-      console.log("Evergage:", window.Evergage);
-      console.groupEnd();
-    })();
-  </script>
 </body>
 </html>
