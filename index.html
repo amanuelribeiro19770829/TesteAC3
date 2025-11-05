@@ -1,11 +1,70 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <title>Bem-vindo!</title>
+  <meta charset="utf-8" />
+  <meta http-equiv="x-ua-compatible" content="ie=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Validação do Beacon — MC Personalization</title>
+
+  <!-- 1) INCLUA O BEACON (troque SEU_ACCOUNT/SEU_DATASET) -->
+  <script src="//cdn.evgnet.com/beacon/novobanco/novo_banco_play/scripts/evergage.min.js"></script>
+
+  <style>
+    body{font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji"; margin:40px}
+    .ok{color:#0a7;}
+    .no{color:#c33;}
+    code{background:#f5f5f5;padding:2px 4px;border-radius:4px}
+    .card{border:1px solid #e6e6e6;border-radius:12px;padding:16px;margin-top:16px}
+  </style>
 </head>
 <body>
-  <h1>Olá! 👋</h1>
-  <p>Esta é a minha página simples alojada gratuitamente.</p>
+  <h1>Validação do Beacon — MC Personalization</h1>
+  <div id="status" class="card">A verificar…</div>
+  <div class="card">
+    <h2>Passos de verificação rápida</h2>
+    <ol>
+      <li>Abra as DevTools (F12) → separador <b>Console</b> e <b>Network</b>.</li>
+      <li>Procure em <b>Network</b> por <code>evergage.min.js</code> e confirme 200/304.</li>
+      <li>No <b>Console</b>, deve existir <code>window.SalesforceInteractions</code> <i>ou</i> <code>window.Evergage</code>.</li>
+    </ol>
+  </div>
+
+  <script>
+    (function () {
+      function elt(id){ return document.getElementById(id); }
+      function badge(ok, text){
+        return '<p class="'+(ok?'ok':'no')+'"><b>'+(ok?'✔':'✖')+'</b> '+text+'</p>';
+      }
+
+      // 2) DETEÇÃO DO NAMESPACE
+      var hasSI = !!window.SalesforceInteractions;
+      var hasEVG = !!window.Evergage;
+
+      var html = "";
+      html += badge(true, "Beacon incluído no HTML (etapa de carregamento verificada no Network).");
+      html += badge(hasSI || hasEVG, "Objeto global encontrado: "
+        + (hasSI ? "SalesforceInteractions" : (hasEVG ? "Evergage" : "nenhum")));
+
+      // 3) INFO EXTRA ÚTIL
+      try {
+        // muitos ambientes expõem uma fila/event bus; apenas mostramos o que existir
+        var details = {
+          userAgent: navigator.userAgent,
+          location: location.href,
+          cookies: document.cookie
+        };
+        html += '<pre style="white-space:pre-wrap;background:#fafafa;padding:12px;border-radius:8px">'
+          + JSON.stringify(details, null, 2) + '</pre>';
+      } catch(e){}
+
+      elt("status").innerHTML = html;
+
+      // 4) LOGS NA CONSOLA
+      console.group("MC Personalization — Verificação do Beacon");
+      console.log("SalesforceInteractions:", window.SalesforceInteractions);
+      console.log("Evergage:", window.Evergage);
+      console.groupEnd();
+    })();
+  </script>
 </body>
 </html>
